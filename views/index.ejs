@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    
+     <% polls.forEach(function(poll) { %>
+     <form method="post" action="/submit/poll/<%= poll._id %>">
+      <%= poll.name %> <br>
+      <%= poll.description %> <br>
+      <% poll.choices.forEach(function(choice) { %>
+        <%= choice %>
+        <input name="choice" value="<%= choice %>" type="radio"/>
+        <% if(poll.results.hasOwnProperty(choice)){%>
+        
+          <%= poll.results[choice] %>
+          
+        <% }; %>
+        <br>
+      <% }) %>
+      <button type="submit">Submit Choice</button>
+      </form>
+     <% }); %>
+
+     
     <script type="text/javascript" src="/javascripts/app.bundle.js"></script>
   </body>
 </html>
