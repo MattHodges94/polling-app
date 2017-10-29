@@ -27,17 +27,22 @@
     "webpack": "^1.12.2"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.17.1",
     "concurrently": "^3.5.0",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "ejs": "~2.5.6",
     "express": "~4.15.2",
+    "express-session": "^1.15.6",
     "extract-text-webpack-plugin": "^1.0.1",
     "mongodb": "^2.2.31",
     "mongoose": "^4.11.14",
     "morgan": "~1.8.1",
     "node-sass-middleware": "0.9.8",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "serve-favicon": "~2.4.2"
   }
 }

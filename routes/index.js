@@ -20,12 +20,11 @@ router.get('/', function(req, res, next) {
       //   if (err) return console.error(err);
       // });
 
-
-      
       PollModel.find().lean().exec(function (err, poll) {
         if (err) throw err;
         res.render('index', {
-          "polls": poll
+          "polls": poll,
+          "user": req.user
         })
       })
  

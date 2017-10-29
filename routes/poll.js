@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var ResultModel = require('../models/result.model.js');
 var PollModel = require('../models/poll.model.js');
 
-/* GET home page. */
+/* POST poll response */
 router.post('/submit/poll/:id', function(req, res, next) {
     var resultObj = {}
 
@@ -24,12 +24,19 @@ router.post('/submit/poll/:id', function(req, res, next) {
 
         poll.update(data, function (err) {
             if (err) return handleError(err);
+            res.redirect('/')
         })
     });
     
-
-    res.redirect('/')
     
 }); 
+
+router.get('/poll/new', function(req, res, next) {
+    if(req.user){
+        res.render('poll')
+    } else {
+        res.redirect('/')
+    }
+})
 
 module.exports = router;

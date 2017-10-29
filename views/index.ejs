@@ -5,6 +5,14 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
+  <% if(!user) { %>
+    <a href="/login">login</a>
+    <a href="/signup">sign up</a>
+  <% } else { %>
+    <a href="/logout">logout</a>
+    <p>Hi, <%= user.local.email %> </p>
+  <% }; %>
+  
      <% polls.forEach(function(poll) { %>
      <form method="post" action="/submit/poll/<%= poll._id %>">
       <%= poll.name %> <br>
