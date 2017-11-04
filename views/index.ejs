@@ -14,24 +14,66 @@
   <% }; %>
   
      <% polls.forEach(function(poll) { %>
-     <form method="post" action="/submit/poll/<%= poll._id %>">
-      <%= poll.name %> <br>
-      <%= poll.description %> <br>
-      <% poll.choices.forEach(function(choice) { %>
-        <%= choice %>
-        <input name="choice" value="<%= choice %>" type="radio"/>
-        <% if(poll.results.hasOwnProperty(choice)){%>
-        
-          <%= poll.results[choice] %>
-          
-        <% }; %>
-        <br>
-      <% }) %>
-      <button type="submit">Submit Choice</button>
-      </form>
-     <% }); %>
 
-     
+      <% if(!user){%>
+        <%if(poll.isPremium){%>
+          <div>
+            <%= poll.name %> <br>
+            <%= poll.description %> <br>
+            <% poll.choices.forEach(function(choice) { %>
+              <%= choice %>
+              <% if(poll.results.hasOwnProperty(choice)){%>
+              
+                <%= poll.results[choice] %>
+                
+              <% }; %>
+              <br>
+            <% }); %>
+            <p>To vote on this poll please <a href="/login">login</a>.</p>
+          </div>
+        <%}else{%>
+           <form method="post" action="/submit/poll/<%= poll._id %>">
+            <%= poll.name %> <br>
+            <%= poll.description %> <br>
+            <% poll.choices.forEach(function(choice) { %>
+              <%= choice %>
+              <% if( !(votedOnCookie && votedOnCookie.includes(poll._id.toString())) ){%>
+                <input name="choice" value="<%= choice %>" type="radio"/>
+              <% }; %>
+              <% if(poll.results.hasOwnProperty(choice)){%>
+              
+                <%= poll.results[choice] %>
+                
+              <% }; %>
+              <br>
+            <% }) %>
+            <% if(votedOnCookie && votedOnCookie.includes(poll._id.toString())){%>
+              <p>Sorry, you've already voted on this poll!</p>
+            <%}else{%>
+              <button type="submit">Submit Choice</button>
+            <%};%>
+          </form>
+        <%};%>
+      <%}else{%>
+
+          <form method="post" action="/submit/poll/<%= poll._id %>">
+            <%= poll.name %> <br>
+            <%= poll.description %> <br>
+            <% poll.choices.forEach(function(choice) { %>
+              <%= choice %>
+              <input name="choice" value="<%= choice %>" type="radio"/>
+              <% if(poll.results.hasOwnProperty(choice)){%>
+              
+                <%= poll.results[choice] %>
+                
+              <% }; %>
+              <br>
+            <% }) %>
+            <button type="submit">Submit Choice</button>
+          </form>
+        <% }; %>
+      <% }); %>
+
     <script type="text/javascript" src="/javascripts/app.bundle.js"></script>
   </body>
 </html>

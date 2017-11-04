@@ -12,7 +12,8 @@ router.get('/', function(req, res, next) {
       //       name: "test",
       //       description: "test poll",
       //       choices: ["choice 1", "choice 2", "choice 3"],
-      //       results: {"choice 1": 0, "choice 2": 0, "choice 3": 0}
+      //       results: {"choice 1": 0, "choice 2": 0, "choice 3": 0},
+      //       isPremium: true
       //   }
       // )
 
@@ -20,11 +21,21 @@ router.get('/', function(req, res, next) {
       //   if (err) return console.error(err);
       // });
 
+
+
+      console.log(req.cookies.votedOn)
+
       PollModel.find().lean().exec(function (err, poll) {
+        poll.forEach(function(element) {
+          if(req.user){
+          console.log(element.usersVoted[0] == req.user._id)
+          }
+        }, this);
         if (err) throw err;
         res.render('index', {
           "polls": poll,
-          "user": req.user
+          "user": req.user,
+          "votedOnCookie": req.cookies.votedOn
         })
       })
  

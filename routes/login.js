@@ -16,11 +16,7 @@ module.exports = function(passport) {
     });
         
     // process the login form
-    router.post('/login', passport.authenticate('local-login', {
-        successRedirect : '/', // redirect to the secure profile section
-        failureRedirect : '/login', // redirect back to the signup page if there is an error
-        failureFlash : true // allow flash messages
-    }));
+    router.post('/login', loginAndCheckRedirect);
 
     // show the signup form
     router.get('/signup', function(req, res) {
@@ -35,6 +31,15 @@ module.exports = function(passport) {
         failureRedirect : '/signup', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
+
+    function loginAndCheckRedirect(req, res, next){
+        
+            passport.authenticate('local-login', {
+                successRedirect : req.session.returnTo ? req.session.returnTo : '/', 
+                failureRedirect : '/login', // redirect back to the signup page if there is an error
+                failureFlash : true // allow flash messages
+            })(req, res, next)
+          }
 
     return router;
 };

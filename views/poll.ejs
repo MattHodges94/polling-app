@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+  
+
+    <!-- LOGIN FORM -->
+    <form action="/poll/new" method="post">
+        <div class="form-group">
+            <label>Poll Title</label>
+            <input type="text" class="form-control" name="title">
+        </div>
+        <div class="form-group">
+            <label>Poll Description</label>
+            <input type="text" class="form-control" name="description">
+        </div>
+
+        <div class="form-group">
+            <label>Poll Options</label>
+            <input type="text" class="form-control" name="choices">
+        </div>
+        <div class="form-group">
+            <label>Poll Options</label>
+            <input type="text" class="form-control" name="choices">
+        </div>
+        <div class="form-group">
+            <label>Poll Options</label>
+            <input type="text" class="form-control" name="choices">
+        </div>
+        <div class="form-group">
+            <label>Login required to vote?</label>
+            <input type="radio" class="form-control" name="isPremium" value="true"> Yes
+            <input type="radio" class="form-control" name="isPremium" value="false" checked> No
+        </div>
+
+        <button type="submit" class="btn btn-warning btn-lg">Submit</button>
+    </form>
+
+    <script type="text/javascript" src="/javascripts/app.bundle.js"></script>
+  </body>
+</html>
+ 

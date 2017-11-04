@@ -15,6 +15,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var session = require('express-session')
 var flash = require('connect-flash')
+var cookieParser = require('cookie-parser');
 
 var index = require('./routes/index');
 var poll = require('./routes/poll');
@@ -23,14 +24,14 @@ var login = require('./routes/login')(passport);
 mongoose.connect(url)
 
 require('./config/passport')(passport); // pass passport for configuration
-
+app.use(cookieParser());
  
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs'); 
 
 // passport config
-app.use(session({ secret: 'enter-new-key-here' })); // session secret
+app.use(session({ secret: 'enter-new-secret-here' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash());
