@@ -7,6 +7,10 @@ var userSchema = mongoose.Schema({
     local: {
         email: String,
         password: String,
+        firstName: String,
+        lastName: String,
+        isVerified: Boolean,
+        verifyToken: String
     },
 
 });

@@ -2,31 +2,46 @@
 
 <!DOCTYPE html>
 <html>
-  <head>
-    <title></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
+  <%- include head.ejs %>
   <body>
   
-    
+    <%- include nav.ejs %>
  <!-- show any messages that come back with authentication -->
     <% if (message.length > 0) { %>
-        <div class="alert alert-danger"><%= message %></div>
+        <div class="alert"><%= message %></div>
     <% } %>
 
-    <!-- LOGIN FORM -->
-    <form action="/signup" method="post">
-        <div class="form-group">
-            <label>Email</label>
-            <input type="text" class="form-control" name="email">
+ <div class="row">
+      <form class="col s12" action="/signup" method="post">
+        <div class="card card-form grey lighten-5">
+           
+           <div class="row">
+                    <div class="input-field col s6">
+                    <input id="fname" type="text" name="fname">
+                    <label for="fname">First Name</label>
+                    </div>
+  
+                    <div class="input-field col s6">
+                    <input id="lname" type="text" name="lname">
+                    <label for="lname">Last Name</label>
+                    </div>
+                </div>
+            <div class="row">
+                <div class="input-field col s12">
+                <input id="email" type="email" name="email" class="validate">
+                <label for="email" data-error="Email address not valid!">Email</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                <input id="password" type="password" name="password" class="validate">
+                <label for="password">Password</label>
+                </div>
+            </div>
+            <button class="btn btn-form" type="submit">Signup</button>
         </div>
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" class="form-control" name="password">
-        </div>
-
-        <button type="submit" class="btn btn-warning btn-lg">Signup</button>
-    </form>
+      </form>
+    </div>
 
     <script type="text/javascript" src="/javascripts/app.bundle.js"></script>
   </body>

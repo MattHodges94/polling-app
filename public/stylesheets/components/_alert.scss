@@ -1,0 +1,46 @@
+#toast-container{
+    left: 20%;
+    right: 20%;
+    margin: 0 auto;
+    max-width: 750px;
+    @media only screen and (max-width: 600px){
+        left: 2%;
+        right: 2%;
+        min-width: 90%;
+        bottom: 1rem;
+    }
+    
+}
+.toast{
+    border-radius: 30px;
+    background-color: orangered !important;
+
+    
+
+}
+
+.alert-green{
+    background-color: #3ed783 !important;
+}
+
+.alert{
+    z-index: 100;
+    background: orangered;
+    border-radius: 30px;
+    color: white;
+    left: 50%;
+    transform: translate(-50%, 0);
+    text-align: center;
+    width: 50%;
+    padding: 0.7rem;
+    position: fixed;
+    @media (min-width: 901px) {
+        top: 3.5rem;
+    }
+
+    @media (max-width: 900px) {
+        width: 95%;
+        bottom: 2rem;
+    }
+
+}

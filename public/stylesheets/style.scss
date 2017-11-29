@@ -1,6 +1,7 @@
-html, body {
-  margin: 0;
-  padding: 0;
-}
 
-  
+@import 'components/general';
+@import 'components/form';
+@import 'components/alert';
+@import 'components/btn';
+@import 'components/card';
+@import 'components/nav';

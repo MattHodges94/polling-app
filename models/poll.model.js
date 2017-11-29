@@ -5,7 +5,8 @@ var pollSchema = new mongoose.Schema({
     "choices": Array,
     "results": Object,
     "usersVoted": Array,
-    "isPremium": Boolean
+    "isPremium": Boolean,
+    "isApproved": Boolean
 });
 
 module.exports = mongoose.model( "PollModel", pollSchema ) 

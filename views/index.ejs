@@ -1,78 +1,87 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
+  <%- include head.ejs %>
   <body>
-  <% if(!user) { %>
-    <a href="/login">login</a>
-    <a href="/signup">sign up</a>
-  <% } else { %>
-    <a href="/logout">logout</a>
-    <p>Hi, <%= user.local.email %> </p>
-  <% }; %>
-  
-     <% polls.forEach(function(poll) { %>
 
-      <% if(!user){%>
-        <%if(poll.isPremium){%>
-          <div>
-            <%= poll.name %> <br>
-            <%= poll.description %> <br>
-            <% poll.choices.forEach(function(choice) { %>
-              <%= choice %>
-              <% if(poll.results.hasOwnProperty(choice)){%>
-              
-                <%= poll.results[choice] %>
-                
-              <% }; %>
-              <br>
-            <% }); %>
-            <p>To vote on this poll please <a href="/login">login</a>.</p>
-          </div>
-        <%}else{%>
-           <form method="post" action="/submit/poll/<%= poll._id %>">
-            <%= poll.name %> <br>
-            <%= poll.description %> <br>
-            <% poll.choices.forEach(function(choice) { %>
-              <%= choice %>
-              <% if( !(votedOnCookie && votedOnCookie.includes(poll._id.toString())) ){%>
-                <input name="choice" value="<%= choice %>" type="radio"/>
-              <% }; %>
-              <% if(poll.results.hasOwnProperty(choice)){%>
-              
-                <%= poll.results[choice] %>
-                
-              <% }; %>
-              <br>
-            <% }) %>
-            <% if(votedOnCookie && votedOnCookie.includes(poll._id.toString())){%>
-              <p>Sorry, you've already voted on this poll!</p>
-            <%}else{%>
-              <button type="submit">Submit Choice</button>
-            <%};%>
-          </form>
-        <%};%>
-      <%}else{%>
+    <%- include nav.ejs %>
+    <% if (message.length > 0) { %>
+      <div class="alert"><%= message %></div>
+    <% } %>
+    <% if (successMessage.length > 0) { %>
+      <div class="alert alert-green"><%= successMessage %></div>
+    <% } %>
+    <div class="grid black-text">
+      <% polls.forEach(function(poll) { %>
+        <% if(poll.isApproved) { %>
+          <% if(!user){%>
+          <div class="gutter-item"></div>
+            <form method="post" id="<%=poll._id.toString()%>" action="/submit/poll/<%= poll._id %>">
+              <div class="grid-item">
+                <div class="card grey lighten-5">
+                  <div class="card-content">
+                    <span class="card-title"><%= poll.name %></span>
+                    <p><%= poll.description %></p>
+                    <% poll.choices.forEach(function(choice) { %>
+                    <div>
+                      <% if( !(votedOnCookie && votedOnCookie.includes(poll._id.toString())) ){%>
+                        <input name="choice" id="<%=poll._id.toString()%>_<%= choice %>" value="<%= choice %>" type="radio"/>
+                      <% }; %>
+                      <label for="<%=poll._id.toString()%>_<%= choice %>" class="choice"><%= choice %></label>
+                      <% if(poll.results.hasOwnProperty(choice)){%>
+                        <span class="result" id="result_<%=poll._id.toString()%>_<%= choice %>"><%= poll.results[choice] %></span>
+                      <% }; %>
+                      </div>
+                    <% }); %>
+                  </div>
+                  <div class="card-action">
+                    <%if(poll.isPremium){%>
+                      <p>To vote on this poll please <a href="/login" class="card__link">login</a></p>
+                    <%}else{%>
+                      <% if(votedOnCookie && votedOnCookie.includes(poll._id.toString())){%>
+                        <p>Thank you for your response!</p>
+                      <%}else{%>
+                        <button class="btn btn-card" type="submit">Submit</button>
+                      <%};%>
+                    <% }; %>
+                  </div>
+                </div>
+              </div>
+            </form>
+          <%}else{%>
+          <div class="gutter-item"></div>
+            <form method="post" id="<%=poll._id.toString()%>" action="/submit/poll/<%= poll._id %>">
+              <div class="grid-item">
+                <div class="card grey lighten-5">
+                  <div class="card-content">
+                    <span class="card-title"><%= poll.name %></span>
+                    <p><%= poll.description %></p>
+                    <% poll.choices.forEach(function(choice) { %>
+                    <div>
+                      <% if( !(user && poll.usersVoted.includes(user._id.toString())) ){%>
+                        <input name="choice" id="<%=poll._id.toString()%>_<%= choice %>" value="<%= choice %>" type="radio"/>
+                      <%};%>
+                      <label for="<%=poll._id.toString()%>_<%= choice %>" class="choice"><%= choice %></label>
+                      <% if(poll.results.hasOwnProperty(choice)){%>
+                        <span class="result" id="result_<%=poll._id.toString()%>_<%= choice %>"><%= poll.results[choice] %></span>
+                      <% }; %>
+                      </div>
+                    <% }); %>
+                  </div>
+                  <div class="card-action">
 
-          <form method="post" action="/submit/poll/<%= poll._id %>">
-            <%= poll.name %> <br>
-            <%= poll.description %> <br>
-            <% poll.choices.forEach(function(choice) { %>
-              <%= choice %>
-              <input name="choice" value="<%= choice %>" type="radio"/>
-              <% if(poll.results.hasOwnProperty(choice)){%>
-              
-                <%= poll.results[choice] %>
-                
-              <% }; %>
-              <br>
-            <% }) %>
-            <button type="submit">Submit Choice</button>
-          </form>
+                      <% if(user && poll.usersVoted.includes(user._id.toString())){%>
+                        <p>Thank you for your response!</p>
+                      <%}else{%>
+                        <button class="btn btn-card" type="submit">Submit</button>
+                      <%};%>
+                  </div>
+                </div>
+              </div>
+            </form>
+          <% }; %>
         <% }; %>
       <% }); %>
+    </div>
 
     <script type="text/javascript" src="/javascripts/app.bundle.js"></script>
   </body>

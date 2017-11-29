@@ -1,6 +1,7 @@
 node_modules
 
 data
+dist
 
 public/stylesheets/style.css
 public/stylesheets/style.css.map

@@ -1,0 +1,29 @@
+<nav class="transparent">
+    <div class="nav-wrapper">
+      <a href="/" class="brand-logo left"><img src="/images/logo.svg"/></a>
+      <a href="#" data-activates="mobile-demo" class="button-collapse right"><i class="material-icons">menu</i></a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down black-text">
+      <% if(!user) { %>
+        <li><a href="/poll/new" class="nav__link">Create a poll</a></li>
+        <li><a href="/login" class="nav__link">Login</a></li>
+        <li><a href="/signup" class="nav__link">Signup</a></li>
+      <% } else { %>
+        <li><p>Hi, <%= user.local.firstName %> </p></li>
+        <li><a href="/poll/new" class="nav__link">Create a poll</a></li>
+        <li><a href="/logout" class="nav__link">Logout</a></li>
+      <% }; %>
+    </ul>
+  </div>
+</nav>
+
+<ul class="side-nav" id="mobile-demo">
+  <% if(!user) { %>
+    <li><a href="/poll/new" class="nav__link">Create a poll</a></li>
+    <li><a href="/login" class="nav__link">Login</a></li>
+    <li><a href="/signup" class="nav__link">Signup</a></li>
+  <%} else { %>
+    <li><p>Hi, <%= user.local.firstName %> </p></li>
+    <li><a href="/poll/new" class="nav__link">Create a poll</a></li>
+    <li><a href="/logout" class="nav__link">Logout</a></li>
+  <%}; %>
+</ul>

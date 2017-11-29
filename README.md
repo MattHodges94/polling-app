@@ -5,4 +5,4 @@ To start:
 * Clone repo
 * Make sure Gulp is installed globally 
 * Run `npm i`
-* Run `gulp serve` to begin development server (http://localhost:3000/)
+* Run `gulp serve` to begin development server (http://localhost:8080/)

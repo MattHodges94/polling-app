@@ -5,10 +5,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sassMiddleware = require('node-sass-middleware');
+var credentials = require('./config/credentials');
 
 var app = express();
 
-var url = 'mongodb://localhost:27017/polling-app';
+var url = credentials.databaseUrl;
 var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
 
@@ -17,11 +18,20 @@ var session = require('express-session')
 var flash = require('connect-flash')
 var cookieParser = require('cookie-parser');
 
+const WebSocket = require('ws');
+const WebSocketServer = require('ws').Server,
+wss = new WebSocketServer({port: 3002})
+
+require('./config/sockets')(wss);
+
+
+
 var index = require('./routes/index');
-var poll = require('./routes/poll');
+var poll = require('./routes/poll')(wss);
 var login = require('./routes/login')(passport);
 
 mongoose.connect(url)
+
 
 require('./config/passport')(passport); // pass passport for configuration
 app.use(cookieParser());
@@ -31,14 +41,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs'); 
 
 // passport config
-app.use(session({ secret: 'enter-new-secret-here' })); // session secret
+app.use(session({ secret: credentials.passportSecret })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash());
 
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
