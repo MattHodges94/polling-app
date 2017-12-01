@@ -84,7 +84,6 @@ module.exports = function(wss) {
 
     router.post('/poll/new', function(req, res, next) {
 
-
     
         var poll = new PollModel(
             {
@@ -115,25 +114,19 @@ module.exports = function(wss) {
             return next()
         }
 
-        if(poll.description.length == 0){
-            req.flash('pollErrorMessage', 'Please enter a poll description before submitting')
-            res.redirect('/poll/new')
-            return next()
-        }
-
         if(poll.choices.length == 0){
             req.flash('pollErrorMessage', 'Please enter some poll choices before submitting')
             res.redirect('/poll/new')
             return next()
         }
 
-        if(poll.name.length > 36){
+        if(poll.name.length > 46){
             req.flash('pollErrorMessage', 'Make sure you stick to the character limits!')
             res.redirect('/poll/new')
             return next()
         }
 
-        if(poll.description.length > 48){
+        if(poll.description.length > 54){
             req.flash('pollErrorMessage', 'Make sure you stick to the character limits!')
             res.redirect('/poll/new')
             return next()

@@ -17,14 +17,14 @@
            <p>When your poll has been submitted it will need to be approved, once approved it will appear on the homepage.</p>
             <div class="row">
                 <div class="input-field col s12">
-                <input id="title" type="text" name="title" data-length="36">
+                <input id="title" type="text" name="title" data-length="46">
                 <label for="title">Poll Title</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                <input id="description" type="text" name="description" data-length="48">
-                <label for="description">Poll Description</label>
+                <input id="description" type="text" name="description" data-length="54">
+                <label for="description">Poll Description (Optional)</label>
                 </div>
             </div>
             <div class="row">
@@ -46,10 +46,10 @@
                 </div>
             </div>
             <p>Login required to vote?</p>
-            <input name="isPremium" type="radio" id="isPremiumTrue" checked="checked"/>
+            <input name="isPremium" type="radio" id="isPremiumTrue" value="true" checked="checked"/>
             <label for="isPremiumTrue">Yes</label>
 
-            <input name="isPremium" type="radio" id="isPremiumFalse" />
+            <input name="isPremium" type="radio" value="false" id="isPremiumFalse" />
             <label for="isPremiumFalse">No</label>
 
             <button class="btn btn-form" id="submit-poll" type="submit">Submit</button>

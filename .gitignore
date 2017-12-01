@@ -9,3 +9,5 @@ public/stylesheets/style.css.map
 public/javascripts/app.bundle.js
 public/javascripts/app.bundle.js.map
 
+config/credentials.js
+

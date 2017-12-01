@@ -46,24 +46,14 @@ ws.onmessage = function (ev) {
                 e.preventDefault()
                 flashAlert('Title cannot be blank')
             }
-            if($('#title').val().length > 36 ){
+            if($('#title').val().length > 46 ){
                 e.preventDefault()
-                flashAlert('Title must be less than 36 characters')
+                flashAlert('Title must be less than 46 characters')
             }
 
-            if($('#description').val() == ''){
+            if($('#description').val().length > 54){
                 e.preventDefault()
-                flashAlert('Description cannot be blank')
-            }
-
-            if($('#description').val().length > 48){
-                e.preventDefault()
-                flashAlert('Description must be less than 48 characters')
-            }
-
-            if($('#description').val() == ''){
-                e.preventDefault()
-                flashAlert('Description cannot be blank')
+                flashAlert('Description must be less than 54 characters')
             }
 
             if(($('#choices-1').val() == '') || ($('#choices-2').val() == '')){
