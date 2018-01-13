@@ -52,13 +52,13 @@ gulp.task('serve', ['scripts'], function() {
 	// configure nodemon
 	nodemon({
 		// the script to run the app
-        script: './bin/www',
+        script: './app.js',
         ext: 'ejs js scss png jpeg jpg svg ttf otf',
         watch: './',
         ignore: "public/javascripts/**/*.js"
 	}).on('restart', function(){
 		// when the app has restarted, run livereload.
-		gulp.src('./bin/www')
+		gulp.src('./app.js')
 			.pipe(livereload())
     })
     gulp.watch(['public/javascripts/**/*.js', '!public/javascripts/app.bundle.js', '!public/javascripts/app.bundle.js.map'], ['scripts']);

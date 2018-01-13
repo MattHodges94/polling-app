@@ -1,4 +1,9 @@
+var https = require('https');
+var http = require('http');
 var express = require('express');
+var app = express();
+var debug = require('debug')('test:server');
+var fs = require('fs');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -6,24 +11,36 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sassMiddleware = require('node-sass-middleware');
 var credentials = require('./config/credentials');
-
-var app = express();
-
 var url = credentials.databaseUrl;
 var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
-
 var passport = require('passport');
 var session = require('express-session')
 var flash = require('connect-flash')
 var cookieParser = require('cookie-parser');
 
+/* Initialise server */
+
+var port = normalizePort(process.env.PORT || '8080');
+app.set('port', port);
+
+// for live
+var server = https.createServer({key: fs.readFileSync(credentials.key, 'utf8'), cert: fs.readFileSync(credentials.cert, 'utf8')}, app);
+// for local development or http on live
+// var server = http.createServer(app);
+
+/* End initialise server */
+
+
+/* Initialise websocket server */
+
 const WebSocket = require('ws');
 const WebSocketServer = require('ws').Server,
-wss = new WebSocketServer({port: 3002})
+wss = new WebSocketServer({server})
 
 require('./config/sockets')(wss);
 
+/* End initialise websocket server */
 
 
 var index = require('./routes/index');
@@ -31,7 +48,6 @@ var poll = require('./routes/poll')(wss);
 var login = require('./routes/login')(passport);
 
 mongoose.connect(url)
-
 
 require('./config/passport')(passport); // pass passport for configuration
 app.use(cookieParser());
@@ -46,7 +62,6 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash());
 
-
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -60,7 +75,6 @@ app.use(sassMiddleware({
   sourceMap: true 
 }));
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 app.use(index);
 app.use(poll);
@@ -83,5 +97,62 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+/* Functions */
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
+
+/* End funcitons */
+
+server.listen(port);
+server.on('error', onError); 
+server.on('listening', onListening);
 
 module.exports = app;

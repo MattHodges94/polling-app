@@ -7,3 +7,6 @@ To start:
 * Make sure Gulp is installed globally 
 * Run `npm i`
 * Run `gulp serve` to begin development server (http://localhost:8080/)
+
+Notes: 
+bin/www no longer in use, app.js is used to start the server so that the websockets can be served over https
