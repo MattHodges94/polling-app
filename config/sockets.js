@@ -1,5 +1,5 @@
-module.exports = function(wss) {
+module.exports = function (wss) {
     
-  wss.on('connection', function (ws) {
-  })
-}
+	wss.on('connection', function () {
+	});
+};

@@ -12,12 +12,10 @@ var bodyParser = require('body-parser');
 var sassMiddleware = require('node-sass-middleware');
 var credentials = require('./config/credentials');
 var url = credentials.databaseUrl;
-var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
 var passport = require('passport');
-var session = require('express-session')
-var flash = require('connect-flash')
-var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var flash = require('connect-flash');
 
 /* Initialise server */
 
@@ -35,9 +33,8 @@ var server = http.createServer(app);
 
 /* Initialise websocket server */
 
-const WebSocket = require('ws');
 const WebSocketServer = require('ws').Server,
-wss = new WebSocketServer({server})
+	wss = new WebSocketServer({server});
 
 require('./config/sockets')(wss);
 
@@ -47,7 +44,7 @@ var index = require('./routes/index');
 var poll = require('./routes/poll')(wss);
 var login = require('./routes/login')(passport);
 
-mongoose.connect(url)
+mongoose.connect(url);
 
 require('./config/passport')(passport); // pass passport for configuration
 app.use(cookieParser());
@@ -69,10 +66,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(sassMiddleware({
-  src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  indentedSyntax: false, // true = .sass and false = .scss
-  sourceMap: true 
+	src: path.join(__dirname, 'public'),
+	dest: path.join(__dirname, 'public'),
+	indentedSyntax: false, // true = .sass and false = .scss
+	sourceMap: true 
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -81,91 +78,91 @@ app.use(poll);
 app.use(login);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.use(function (req, res, next) {
+	var err = new Error('Not Found');
+	err.status = 404;
+	next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function (err, req, res) {
+	// set locals, only providing error in development
+	res.locals.message = err.message;
+	res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+	// render the error page
+	res.status(err.status || 500);
+	res.render('error');
 });
 
 /* Functions */
-function normalizePort(val) {
-  var port = parseInt(val, 10);
+function normalizePort (val) {
+	var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+	if (isNaN(port)) {
+		// named pipe
+		return val;
+	}
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+	if (port >= 0) {
+		// port number
+		return port;
+	}
 
-  return false;
+	return false;
 }
 
-function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+function onError (error) {
+	if (error.syscall !== 'listen') {
+		throw error;
+	}
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+	var bind = typeof port === 'string'
+		? 'Pipe ' + port
+		: 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
+	// handle specific listen errors with friendly messages
+	switch (error.code) {
+	case 'EACCES':
+		console.error(bind + ' requires elevated privileges');
+		process.exit(1);
+		break;
+	case 'EADDRINUSE':
+		console.error(bind + ' is already in use');
+		process.exit(1);
+		break;
+	default:
+		throw error;
+	}
 }
 
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+function onListening () {
+	var addr = server.address();
+	var bind = typeof addr === 'string'
+		? 'pipe ' + addr
+		: 'port ' + addr.port;
+	debug('Listening on ' + bind);
 }
 
-function browserSync() {
-  const browserSync = require('browser-sync').create();
+function browserSync () {
+	const browserSync = require('browser-sync').create();
 
-  browserSync.init({
-    files: ['public/**/*', 'views/**/*', 'routes/**/*'],
-      online: false,
-      open: false,
-      port: port + 1,
-      proxy: 'localhost:' + port,
-      ui: false
-  });
+	browserSync.init({
+		files: ['public/**/*', 'views/**/*', 'routes/**/*'],
+		online: false,
+		open: false,
+		port: port + 1,
+		proxy: 'localhost:' + port,
+		ui: false
+	});
 }
 
 /* End funcitons */
 
 server.listen(port, () => {
-  if(!isProduction) {
-      browserSync();
-  }
+	if (!isProduction) {
+		browserSync();
+	}
 });
 server.on('error', onError); 
 server.on('listening', onListening);
