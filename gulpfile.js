@@ -1,16 +1,7 @@
 // Dependencies
 var gulp = require('gulp');
-var nodemon = require('gulp-nodemon');
-var livereload = require('gulp-livereload');
 var webpack = require('gulp-webpack');
 var $ = require('gulp-load-plugins')();
-
-gulp.task('scripts', function () {
-  return gulp.src('./public/javascripts/main.js')
-    .pipe(webpack(require('./webpack.config.js')))
-    .pipe(gulp.dest('./'))
-    .pipe(livereload())
-});
 
 gulp.task('dist', function(){
     gulp.src(['./bin/**/*']).pipe(gulp.dest('./dist/bin'));
@@ -41,26 +32,5 @@ gulp.task('dist', function(){
        ]))
        .pipe(gulp.dest('./dist/public/stylesheets'))
 
-    
-})
-
- 
-// Task
-gulp.task('serve', ['scripts'], function() {
-	// listen for changes
-	livereload.listen();
-	// configure nodemon
-	nodemon({
-		// the script to run the app
-        script: './app.js',
-        ext: 'ejs js scss png jpeg jpg svg ttf otf',
-        watch: './',
-        ignore: "public/javascripts/**/*.js"
-	}).on('restart', function(){
-		// when the app has restarted, run livereload.
-		gulp.src('./app.js')
-			.pipe(livereload())
-    })
-    gulp.watch(['public/javascripts/**/*.js', '!public/javascripts/app.bundle.js', '!public/javascripts/app.bundle.js.map'], ['scripts']);
     
 })

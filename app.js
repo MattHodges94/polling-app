@@ -21,16 +21,17 @@ var cookieParser = require('cookie-parser');
 
 /* Initialise server */
 
-var port = normalizePort(process.env.PORT || '8080');
+const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
+const isProduction = 'production' === process.env.NODE_ENV;
+
 // for live
-var server = https.createServer({key: fs.readFileSync(credentials.key, 'utf8'), cert: fs.readFileSync(credentials.cert, 'utf8')}, app);
+// var server = https.createServer({key: fs.readFileSync(credentials.key, 'utf8'), cert: fs.readFileSync(credentials.cert, 'utf8')}, app);
 // for local development or http on live
-// var server = http.createServer(app);
+var server = http.createServer(app);
 
 /* End initialise server */
-
 
 /* Initialise websocket server */
 
@@ -41,7 +42,6 @@ wss = new WebSocketServer({server})
 require('./config/sockets')(wss);
 
 /* End initialise websocket server */
-
 
 var index = require('./routes/index');
 var poll = require('./routes/poll')(wss);
@@ -98,7 +98,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-
 /* Functions */
 function normalizePort(val) {
   var port = parseInt(val, 10);
@@ -140,7 +139,6 @@ function onError(error) {
   }
 }
 
-
 function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
@@ -149,9 +147,26 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
+function browserSync() {
+  const browserSync = require('browser-sync').create();
+
+  browserSync.init({
+    files: ['public/**/*', 'views/**/*', 'routes/**/*'],
+      online: false,
+      open: false,
+      port: port + 1,
+      proxy: 'localhost:' + port,
+      ui: false
+  });
+}
+
 /* End funcitons */
 
-server.listen(port);
+server.listen(port, () => {
+  if(!isProduction) {
+      browserSync();
+  }
+});
 server.on('error', onError); 
 server.on('listening', onListening);
 

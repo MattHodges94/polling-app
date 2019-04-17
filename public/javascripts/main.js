@@ -1,12 +1,11 @@
 import { setTimeout } from 'timers';
 
-
 var credentials = require('../../config/credentials')
 var ws = new WebSocket(credentials.wsUrl);
 // event emmited when connected
 ws.onopen = function () {
     console.log('websocket is connected ...')
-
+    
 }
 // event emmited when receiving message 
 ws.onmessage = function (ev) {
@@ -14,11 +13,8 @@ ws.onmessage = function (ev) {
     var resultsObj = JSON.parse(ev.data)
     var poll = document.getElementById(resultsObj.id)
     var newResults = ''
-
     document.getElementById("result_" + resultsObj.id + "_" + resultsObj.choice).innerHTML = resultsObj.result
-
 }
-
 
     $( document ).ready(function(){
 
