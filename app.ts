@@ -1,6 +1,6 @@
 var https = require('https');
 var http = require('http');
-var express = require('express');
+import * as express from 'express';
 var app = express();
 var debug = require('debug')('test:server');
 var fs = require('fs');
@@ -15,6 +15,13 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var session = require('express-session');
 var flash = require('connect-flash');
+
+interface Error {
+	status?: number;
+	message?: string;
+	syscall?: string;
+	code?: string;
+}
 
 /* Initialise server */
 
@@ -71,14 +78,14 @@ app.use(poll);
 app.use(login);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function (req: express.Request, res: express.Response, next) {
 	var err = new Error('Not Found');
-	err.status = 404;
+	(err as Error).status = 404;
 	next(err);
 });
 
 // error handler
-app.use(function (err, req, res) {
+app.use(function (err: Error, req: express.Request, res: express.Response, next: express.NextFunction) {
 	// set locals, only providing error in development
 	res.locals.message = err.message;
 	res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -89,7 +96,7 @@ app.use(function (err, req, res) {
 });
 
 /* Functions */
-function normalizePort (val) {
+function normalizePort (val: any) {
 	var port = parseInt(val, 10);
 
 	if (isNaN(port)) {
@@ -105,7 +112,7 @@ function normalizePort (val) {
 	return false;
 }
 
-function onError (error) {
+function onError (error: Error) {
 	if (error.syscall !== 'listen') {
 		throw error;
 	}

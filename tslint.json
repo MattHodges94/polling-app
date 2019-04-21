@@ -1,0 +1,42 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "indent": [
+            true,
+            "tabs"
+        ],
+		"linebreak-style": [
+			true,
+			"unix"
+		],
+		"quotemark": [
+			true,
+			"single"
+		],
+		"semicolon": [
+			true,
+			"always"
+		],
+		"space-before-function-paren": [
+			true,
+			"always"
+		],
+		"space-before-blocks": [
+			true,
+			"always",
+		],
+		"keyword-spacing": [
+			true,
+			{ "before": true, "after": true }
+		],
+		"no-multiple-empty-lines": [
+			true,
+			{ "max": 1 }
+		]
+    },
+    "rulesDirectory": []
+}

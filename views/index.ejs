@@ -23,10 +23,12 @@
                     <p><%= poll.description %></p>
                     <% poll.choices.forEach(function(choice) { %>
                     <div>
-                      <% if( !(votedOnCookie && votedOnCookie.includes(poll._id.toString())) ){%>
-                        <input name="choice" id="<%=poll._id.toString()%>_<%= choice %>" value="<%= choice %>" type="radio"/>
-                      <% }; %>
-                      <label for="<%=poll._id.toString()%>_<%= choice %>" class="choice"><%= choice %></label>
+                      <label for="<%=poll._id.toString()%>_<%= choice %>" class="choice">
+                        <% if( !(votedOnCookie && votedOnCookie.includes(poll._id.toString())) ){%>
+                          <input name="choice" id="<%=poll._id.toString()%>_<%= choice %>" value="<%= choice %>" type="radio"/>
+                        <% }; %>
+                        <span><%= choice %></span>
+                      </label>
                       <% if(poll.results.hasOwnProperty(choice)){%>
                         <span class="result" id="result_<%=poll._id.toString()%>_<%= choice %>"><%= poll.results[choice] %></span>
                       <% }; %>
@@ -57,10 +59,12 @@
                     <p><%= poll.description %></p>
                     <% poll.choices.forEach(function(choice) { %>
                     <div>
-                      <% if( !(user && poll.usersVoted.includes(user._id.toString())) ){%>
-                        <input name="choice" id="<%=poll._id.toString()%>_<%= choice %>" value="<%= choice %>" type="radio"/>
-                      <%};%>
-                      <label for="<%=poll._id.toString()%>_<%= choice %>" class="choice"><%= choice %></label>
+                      <label for="<%=poll._id.toString()%>_<%= choice %>" class="choice">
+                        <% if( !(user && poll.usersVoted.includes(user._id.toString())) ){%>
+                          <input name="choice" id="<%=poll._id.toString()%>_<%= choice %>" value="<%= choice %>" type="radio"/>
+                        <%};%>
+                       <span><%= choice %></span>
+                      </label>
                       <% if(poll.results.hasOwnProperty(choice)){%>
                         <span class="result" id="result_<%=poll._id.toString()%>_<%= choice %>"><%= poll.results[choice] %></span>
                       <% }; %>
