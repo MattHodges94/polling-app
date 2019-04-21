@@ -1,7 +1,7 @@
 <nav class="transparent">
     <div class="nav-wrapper">
       <a href="/" class="brand-logo left"><img src="/images/logo.svg"/></a>
-      <a href="#" data-activates="mobile-demo" class="button-collapse right"><i class="material-icons">menu</i></a>
+      <a href="#" data-target="slide-out" class="sidenav-trigger right"><i class="material-icons">menu</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down black-text">
       <% if(!user) { %>
         <li><a href="/poll/new" class="nav__link">Create a poll</a></li>
@@ -16,7 +16,7 @@
   </div>
 </nav>
 
-<ul class="side-nav" id="mobile-demo">
+<ul class="sidenav" id="slide-out">
   <% if(!user) { %>
     <li><a href="/poll/new" class="nav__link">Create a poll</a></li>
     <li><a href="/login" class="nav__link">Login</a></li>

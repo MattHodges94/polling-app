@@ -1,5 +1,6 @@
 var credentials = require('../../config/credentials');
 var ws = new WebSocket(credentials.wsUrl);
+
 // event emmited when connected
 ws.onopen = function () {
 	console.log('websocket is connected ...');
@@ -14,8 +15,7 @@ ws.onmessage = function (ev) {
 
 $( document ).ready(function () {
 
-	// materialize mobile nav set up
-	$('.button-collapse').sideNav();
+	$('.sidenav').sidenav();
 
 	//init masonry grid
 	$('.grid').masonry({
@@ -38,12 +38,12 @@ $( document ).ready(function () {
 			e.preventDefault();
 			flashAlert('Title cannot be blank');
 		}
-		if ($('#title').val().length > 46 ) {
+		if (($('#title').val() as string).length > 46 ) {
 			e.preventDefault();
 			flashAlert('Title must be less than 46 characters');
 		}
 
-		if ($('#description').val().length > 54) {
+		if (($('#description').val() as string).length > 54) {
 			e.preventDefault();
 			flashAlert('Description must be less than 54 characters');
 		}
@@ -53,15 +53,14 @@ $( document ).ready(function () {
 			flashAlert('You must enter some choices before submitting');
 		}
 
-		if (($('#choices-1').val().length > 20) || ($('#choices-2').val().length > 20) || ($('#choices-3').val().length > 20)) {
+		if ((($('#choices-1').val() as string).length > 20) || (($('#choices-2').val() as string).length > 20) || (($('#choices-3').val() as string).length > 20)) {
 			e.preventDefault();
 			flashAlert('Choices must be below 20 characters');
 		}
-
 	});
 
-	function flashAlert (message) {
-		Materialize.toast(message, 2500);
+	function flashAlert (message: string) {
+		M.toast({ html: message, displayLength: 2500 });
 	}
 
 });

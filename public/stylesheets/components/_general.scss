@@ -29,7 +29,7 @@ body{
 }
 
 //for login button on card
-.card .card-action a:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating){
+.card .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
     color: #3ed783;
 }
 
