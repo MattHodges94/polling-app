@@ -8,7 +8,7 @@
     "serve:frontend": "webpack --watch",
     "serve:server": "nodemon app.js",
     "test:file": "mocha --require ts-node/register test/**/$npm_config_file.spec.ts --exit",
-    "test": "mocha --require ts-node/register test/**/*.spec.ts"
+    "test": "mocha --require ts-node/register test/**/*.spec.ts --exit"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
