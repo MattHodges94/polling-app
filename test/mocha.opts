@@ -1,0 +1,2 @@
+--require test/mocha.env.ts
+--file test/mongo-server-setup.ts
