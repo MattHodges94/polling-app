@@ -62,7 +62,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs'); 
 
 // passport config
-app.use(session({ secret: credentials.passportSecret })); // session secret
+app.use(session({ secret: credentials.passportSecret || process.env.PASSPORT_SECRET })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash());
