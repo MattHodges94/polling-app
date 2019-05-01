@@ -10,7 +10,7 @@ router.get('/', function (req, res) {
 		} 
 		res.render('index', {
 			'polls': poll,
-			'user': req.user,
+			'user': req.user ? req.user.toObject() : void 0,
 			'votedOnCookie': req.cookies.votedOn,
 			message: req.flash('homeErrorMessage'),
 			successMessage: req.flash('homeSuccessMessage')	
