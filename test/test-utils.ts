@@ -3,19 +3,23 @@ import * as Poll from '../models/poll.model';
 // @ts-ignore
 import * as User from '../models/user.model';
 
-export const createUser = async () => {
-    return User.create({
-        local: {
-            email: 'mocha@test.com',
-            // @ts-ignore
-            password: User.generateHash('mocha123'),
-            isVerified: true,
-        },
+export const createUser = async (options = {}) => {
+    const userProperties = Object.assign({
+        email: 'mocha@test.com',
+        // @ts-ignore
+        password: User.generateHash('mocha123'),
+        isVerified: true,
+    }, options);
+
+    await User.create({
+        local: userProperties,
     });
+
+    return User.findOne({ 'local.email': userProperties.email }).lean();
 }
 
-export const createPoll = async () => {
-    return Poll.create({
+export const createPoll = async (options = {}) => {
+    const pollProperties = Object.assign({
         name: 'mocha poll',
         description: 'poll for mocha test',
         choices: [],
@@ -23,5 +27,7 @@ export const createPoll = async () => {
         usersVoted: [],
         isPremium: false,
         isApproved: true,
-    });
+    }, options);
+
+    return Poll.create(pollProperties);
 }
