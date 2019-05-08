@@ -7,15 +7,16 @@ var User = require('../models/user.model');
 module.exports = function (passport) {
 
 	router.get('/logout', function (req, res) {
-		req.logout();
+		if (req.user) {
+			req.logout();
+		}
 		res.redirect('/');
 	});
 
 	router.get('/login', function (req, res) {
-        
 		// render the page and pass in any flash data if it exists
-		res.render('login.ejs', { 
-			'user': req.user,
+		res.render('login', { 
+			'user': req.user ? req.user.toObject() : void 0,
 			message: req.flash('loginMessage') 
 		}); 
 	});
@@ -26,44 +27,48 @@ module.exports = function (passport) {
 	// show the signup form
 	router.get('/signup', function (req, res, next) {
 		if (req.user) {
-			res.redirect('/');
-			return next();
+			return res.redirect('/');
 		}
-        
 		// render the page and pass in any flash data if it exists
-		res.render('signup.ejs', { 
+		res.render('signup', { 
 			'user': req.user,
 			message: req.flash('signupMessage') 
 		});
 	});
         
 	// process the signup form
-	router.post('/signup', passport.authenticate('local-signup', {
-		successRedirect : '/',
-		failureRedirect : '/signup', 
-		failureFlash : true
-	}));
+	router.post('/signup', (req, res, next) => {
+		if (req.user) {
+			return res.redirect('/');
+		}
+
+		passport.authenticate('local-signup', {
+			successRedirect : '/',
+			failureRedirect : '/signup', 
+			failureFlash : true
+		})(req, res, next);
+	});
 
 	router.get('/verify/:uid/:token', function (req, res) {
 		var uid = req.params.uid;
 		var token = req.params.token;
 
 		// find user from database
-		User.findOne({'_id': uid}, function (err, user) {
+		User.findOne({'_id': uid}, async function (err, user) {
 			//check if verify token matches param token
-			if (user.local.verifyToken == token) {
+			if (!user.local.isVerified && user.local.verifyToken == token) {
 				//tokens match, update user to verified
-				User.findOneAndUpdate({'_id': uid}, {'local.isVerified': true}, function (err, resp) {
-					console.log('The user has been verified!');
-				});
-
-				res.redirect('/login');
+				await User.findOneAndUpdate({'_id': uid}, {'local.isVerified': true});
 			}
+
+			res.redirect('/login');
 		});
 	});
 
 	function loginAndCheckRedirect (req, res, next) {
-        
+        if (req.user) {
+			return res.redirect('/');
+		}
 		passport.authenticate('local-login', {
 			successRedirect : req.session.returnTo ? req.session.returnTo : '/', 
 			failureRedirect : '/login', // redirect back to the signup page if there is an error
