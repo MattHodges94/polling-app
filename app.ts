@@ -51,7 +51,7 @@ var poll = require('./routes/poll')(wss);
 var login = require('./routes/login')(passport);
 
 if (process.env.NODE_ENV !== 'test') {
-mongoose.connect(url);
+	mongoose.connect(url);
 }
 
 require('./config/passport')(passport); // pass passport for configuration

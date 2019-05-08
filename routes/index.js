@@ -8,6 +8,7 @@ router.get('/', function (req, res) {
 		if (err) {
 			throw err;
 		} 
+
 		res.render('index', {
 			'polls': poll,
 			'user': req.user ? req.user.toObject() : void 0,
