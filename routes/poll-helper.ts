@@ -8,9 +8,9 @@ export const updateVotedOnCookie = (req: express.Request, res: express.Response)
 
 export const updateUsersVotedOnPoll = (req: express.Request, res: express.Response, poll: any) => {
     if (poll.usersVoted.includes(req.user._id.toString())) {
-        return res.redirect('/');
+        return false;
     } else {
-        poll.usersVoted.push(req.user._id.toString());
+        return poll.usersVoted.push(req.user._id.toString());
     }
 }
 

@@ -1,7 +1,7 @@
 import * as express from 'express';
 import { updateClientPolls, updateUsersVotedOnPoll, updateVotedOnCookie, validatePoll } from './poll-helper';
 var router = express.Router();
-var PollModel = require('../models/poll.model.js');
+import { default as Poll } from '../models/poll.model';
 
 module.exports = function (wss: any) {
 	router.post('/submit/poll/:id', function (req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -11,10 +11,14 @@ module.exports = function (wss: any) {
 			return res.redirect('/');
 		}
 
-		PollModel.findById(req.params.id, function (err: Error, poll: any) { 
+		Poll.findById(req.params.id, function (err: Error, poll: any) { 
 			//checks if logged in user has already voted or if logged out user has already voted through cookies
 			if (req.user) {
-				updateUsersVotedOnPoll(req, res, poll);
+				let redirect = !updateUsersVotedOnPoll(req, res, poll);
+
+				if (redirect) {
+					return res.redirect('/')
+				}
 			} else if (req.cookies.votedOn && JSON.parse(req.cookies.votedOn).includes(req.params.id)) {
 				return res.redirect('/');
 			} else {
@@ -52,7 +56,7 @@ module.exports = function (wss: any) {
 			return res.redirect('/login');
 		}
 
-		var poll = new PollModel(
+		var poll = new Poll(
 			{
 				name: req.body.title || '',
 				description: req.body.description || '',

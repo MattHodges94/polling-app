@@ -46,11 +46,15 @@
                 </div>
             </div>
             <p>Login required to vote?</p>
-            <input name="isPremium" type="radio" id="isPremiumTrue" value="true" checked="checked"/>
-            <label for="isPremiumTrue">Yes</label>
+            <label for="isPremiumTrue">
+              <input name="isPremium" type="radio" id="isPremiumTrue" value="true" checked="checked"/>
+              <span>Yes</span>
+            </label>
 
-            <input name="isPremium" type="radio" value="false" id="isPremiumFalse" />
-            <label for="isPremiumFalse">No</label>
+            <label for="isPremiumFalse">
+                <input name="isPremium" type="radio" value="false" id="isPremiumFalse" />
+              <span>No</span>
+            </label>
 
             <button class="btn btn-form" id="submit-poll" type="submit">Submit</button>
         </div>
