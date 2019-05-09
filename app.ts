@@ -1,20 +1,21 @@
-var https = require('https');
-var http = require('http');
-import * as express from 'express';
-var app = express();
-var debug = require('debug')('test:server');
-var fs = require('fs');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var credentials = require('./config/credentials');
-var url = credentials.databaseUrl;
-var mongoose = require('mongoose');
-var passport = require('passport');
-var session = require('express-session');
-var flash = require('connect-flash');
+import https from 'https';
+import http from'http';
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
+import favicon from 'serve-favicon';
+import logger from 'morgan';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+// @ts-ignore
+import mongoose from 'mongoose';
+import passport from 'passport';
+import session from 'express-session';
+import flash from 'connect-flash';
+
+const credentials = require('./config/credentials');
+
+import { Server } from 'http';
 
 interface Error {
 	status?: number;
@@ -23,45 +24,40 @@ interface Error {
 	code?: string;
 }
 
-/* Initialise server */
+const app = express(),
+	port = Number(process.env.PORT) || 3000;
 
-const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 const isProduction = 'production' === process.env.NODE_ENV;
 
-// for live
-// var server = https.createServer({key: fs.readFileSync(credentials.key, 'utf8'), cert: fs.readFileSync(credentials.cert, 'utf8')}, app);
-// for local development or http on live
-var server = http.createServer(app);
+let server: Server | Server;
 
-/* End initialise server */
-
-/* Initialise websocket server */
+if (isProduction) {
+	server = https.createServer({key: fs.readFileSync(credentials.key, 'utf8'), cert: fs.readFileSync(credentials.cert, 'utf8')}, app);
+} else {
+	server = http.createServer(app);
+}
 
 const WebSocketServer = require('ws').Server,
 	wss = new WebSocketServer({server});
 
-require('./config/sockets')(wss);
-
-/* End initialise websocket server */
-
-var index = require('./routes/index');
-var poll = require('./routes/poll')(wss);
-var login = require('./routes/login')(passport);
+const index = require('./routes/index');
+const poll = require('./routes/poll')(wss);
+const login = require('./routes/login')(passport);
 
 if (process.env.NODE_ENV !== 'test') {
-	mongoose.connect(url);
+	mongoose.connect(credentials.databaseUrl || process.env.DATABASE_URL);
 }
 
-require('./config/passport')(passport); // pass passport for configuration
 app.use(cookieParser());
- 
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs'); 
 
 // passport config
+require('./lib/auth/passport')(passport);
 app.use(session({ secret: credentials.passportSecret || process.env.PASSPORT_SECRET })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
@@ -80,41 +76,21 @@ app.use(poll);
 app.use(login);
 
 // catch 404 and forward to error handler
-app.use(function (req: express.Request, res: express.Response, next) {
+app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
 	var err = new Error('Not Found');
 	(err as Error).status = 404;
 	next(err);
 });
 
-// error handler
-app.use(function (err: Error, req: express.Request, res: express.Response, next: express.NextFunction) {
-	// set locals, only providing error in development
+app.use((err: Error, req: express.Request, res: express.Response) => {
 	res.locals.message = err.message;
 	res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-	// render the error page
 	res.status(err.status || 500);
 	res.render('error');
 });
 
-/* Functions */
-function normalizePort (val: any) {
-	var port = parseInt(val, 10);
-
-	if (isNaN(port)) {
-		// named pipe
-		return val;
-	}
-
-	if (port >= 0) {
-		// port number
-		return port;
-	}
-
-	return false;
-}
-
-function onError (error: Error) {
+const onError = (error: Error) => {
 	if (error.syscall !== 'listen') {
 		throw error;
 	}
@@ -138,15 +114,15 @@ function onError (error: Error) {
 	}
 }
 
-function onListening () {
+const onListening = () => {
 	var addr = server.address();
 	var bind = typeof addr === 'string'
 		? 'pipe ' + addr
 		: 'port ' + addr.port;
-	debug('Listening on ' + bind);
+	console.log('Listening on ' + bind);
 }
 
-function browserSync () {
+const browserSync = () => {
 	const browserSync = require('browser-sync').create();
 
 	browserSync.init({
@@ -158,8 +134,6 @@ function browserSync () {
 		ui: false
 	});
 }
-
-/* End funcitons */
 
 server.listen(port, () => {
 	if (!isProduction) {

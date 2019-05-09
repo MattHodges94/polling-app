@@ -56,6 +56,9 @@
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
+    "@types/express-session": "^1.15.12",
+    "@types/morgan": "^1.7.35",
+    "@types/serve-favicon": "^2.2.30",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.17.1",
     "concurrently": "^3.5.0",
