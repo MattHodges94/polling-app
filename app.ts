@@ -31,7 +31,7 @@ app.set('port', port);
 
 const isProduction = 'production' === process.env.NODE_ENV;
 
-let server: Server | Server;
+let server: Server;
 
 if (isProduction) {
 	server = https.createServer({key: fs.readFileSync(credentials.key, 'utf8'), cert: fs.readFileSync(credentials.cert, 'utf8')}, app);
@@ -143,4 +143,4 @@ server.listen(port, () => {
 server.on('error', onError); 
 server.on('listening', onListening);
 
-module.exports = app;
+export default app;
