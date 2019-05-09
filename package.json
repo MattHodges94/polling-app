@@ -56,8 +56,12 @@
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
+    "@types/bcrypt-nodejs": "0.0.30",
     "@types/express-session": "^1.15.12",
     "@types/morgan": "^1.7.35",
+    "@types/nodemailer": "^4.6.8",
+    "@types/passport-local": "^1.0.33",
+    "@types/randomstring": "^1.1.6",
     "@types/serve-favicon": "^2.2.30",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.17.1",
