@@ -1,13 +1,13 @@
-var express = require('express');
-var router = express.Router();
-var PollModel = require('../models/poll.model.js');
+import express from 'express';
+import { default as Poll } from '../models/poll.model';
+const router = express.Router();
 
-router.get('/', function (req, res) {
+router.get('/', function (req: express.Request, res: express.Response) {
 	// get all polls from database
-	PollModel.find().lean().exec(function (err, poll) {
+	Poll.find().lean().exec(function (err, poll) {
 		if (err) {
 			throw err;
-		} 
+		}
 
 		res.render('index', {
 			'polls': poll,

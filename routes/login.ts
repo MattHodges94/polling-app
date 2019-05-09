@@ -1,19 +1,18 @@
-var express = require('express');
-var router = express.Router();
+import express, { Request, Response, NextFunction } from 'express';
+const router = express.Router();
 
-// load up the user model
-var User = require('../models/user.model');
+import { default as User, UserModel } from '../models/user.model';
 
-module.exports = function (passport) {
+module.exports = function (passport: any) {
 
-	router.get('/logout', function (req, res) {
+	router.get('/logout', function (req: Request, res: Response) {
 		if (req.user) {
 			req.logout();
 		}
 		res.redirect('/');
 	});
 
-	router.get('/login', function (req, res) {
+	router.get('/login', function (req: Request, res: Response) {
 		// render the page and pass in any flash data if it exists
 		res.render('login', { 
 			'user': req.user ? req.user.toObject() : void 0,
@@ -25,7 +24,7 @@ module.exports = function (passport) {
 	router.post('/login', loginAndCheckRedirect);
 
 	// show the signup form
-	router.get('/signup', function (req, res, next) {
+	router.get('/signup', function (req: Request, res: Response) {
 		if (req.user) {
 			return res.redirect('/');
 		}
@@ -37,7 +36,7 @@ module.exports = function (passport) {
 	});
         
 	// process the signup form
-	router.post('/signup', (req, res, next) => {
+	router.post('/signup', (req: Request, res: Response, next: NextFunction) => {
 		if (req.user) {
 			return res.redirect('/');
 		}
@@ -49,12 +48,12 @@ module.exports = function (passport) {
 		})(req, res, next);
 	});
 
-	router.get('/verify/:uid/:token', function (req, res) {
+	router.get('/verify/:uid/:token', function (req: Request, res: Response) {
 		var uid = req.params.uid;
 		var token = req.params.token;
 
 		// find user from database
-		User.findOne({'_id': uid}, async function (err, user) {
+		User.findOne({'_id': uid}, async function (err: any, user: UserModel) {
 			//check if verify token matches param token
 			if (!user.local.isVerified && user.local.verifyToken == token) {
 				//tokens match, update user to verified
@@ -65,7 +64,7 @@ module.exports = function (passport) {
 		});
 	});
 
-	function loginAndCheckRedirect (req, res, next) {
+	function loginAndCheckRedirect (req: Request, res: Response, next: NextFunction) {
         if (req.user) {
 			return res.redirect('/');
 		}

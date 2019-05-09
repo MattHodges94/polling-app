@@ -1,13 +1,12 @@
-var LocalStrategy   = require('passport-local').Strategy;
+import LocalStrategy from 'passport-local';
+import { default as User, UserModel } from '../../models/user.model';
+import nodemailer from 'nodemailer';
+import randomstring from 'randomstring';
+import { Request } from 'express';
 
-var User            = require('../../models/user.model');
+const credentials = require('../../config/credentials');
 
-var nodemailer = require('nodemailer');
-var randomstring = require('randomstring');
-
-var credentials = require('../../config/credentials');
-
-module.exports = function (passport) {
+module.exports = function (passport: any) {
 
 	// =========================================================================
 	// passport session setup ==================================================
@@ -16,12 +15,12 @@ module.exports = function (passport) {
 	// passport needs ability to serialize and unserialize users out of session
 
 	// used to serialize the user for the session
-	passport.serializeUser(function (user, done) {
+	passport.serializeUser(function (user: UserModel, done: any) {
 		done(null, user.id);
 	});
 
 	// used to deserialize the user
-	passport.deserializeUser(function (id, done) {
+	passport.deserializeUser(function (id: string, done: any) {
 		User.findById(id, function (err, user) {
 			done(err, user);
 		});
@@ -31,18 +30,18 @@ module.exports = function (passport) {
 	// LOCAL SIGNUP ============================================================
 	// =========================================================================
 
-	passport.use('local-signup', new LocalStrategy({
+	passport.use('local-signup', new LocalStrategy.Strategy({
 		usernameField : 'email',
 		passwordField : 'password',
 		passReqToCallback : true //pass back request to the callback
 	},
-	function (req, email, password, done) {
+	function (req: Request, email: string, password: string, done: any) {
 
 		// User.findOne wont fire unless data is sent back
 		process.nextTick(function () {
 
 			// check to see if the user trying to login already exists
-			User.findOne({ 'local.email' :  email }, function (err, user) {
+			User.findOne({ 'local.email' :  email }, function (err: any, user: UserModel) {
 				// if there are any errors, return the error
 				if (err) {
 					return done(err);
@@ -55,10 +54,11 @@ module.exports = function (passport) {
 
 					// if there is no user with that email
 					// create the user
-					var newUser = new User();
+					var newUser = (new User() as UserModel);
 
 					// set the user's local credentials
 					newUser.local.email = email;
+					// @ts-ignore
 					newUser.local.password = User.generateHash(password);
 					newUser.local.firstName = req.body.fname;
 					newUser.local.lastName = req.body.lname;
@@ -66,7 +66,7 @@ module.exports = function (passport) {
 					newUser.local.verifyToken = randomstring.generate({ length: 64 });
 
 					// save the user
-					newUser.save(function (err, user) {
+					newUser.save(function (err: any, user: UserModel) {
 						if (err) {
 							throw err;
 						}
@@ -108,15 +108,15 @@ module.exports = function (passport) {
 
 	}));
 
-	passport.use('local-login', new LocalStrategy({
+	passport.use('local-login', new LocalStrategy.Strategy({
 		usernameField : 'email',
 		passwordField : 'password',
 		passReqToCallback : true 
 	},
-	function (req, email, password, done) { 
+	function (req: Request, email: string, password: string, done: any) { 
 
 		// check to see if the user trying to login already exists
-		User.findOne({ 'local.email' :  email }, function (err, user) {
+		User.findOne({ 'local.email' :  email }, function (err: any, user: UserModel) {
 
 			// if there are any errors, return the error before anything else
 			if (err) {
@@ -141,6 +141,5 @@ module.exports = function (passport) {
 		});
 
 	}));
-
 };
 
