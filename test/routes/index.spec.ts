@@ -1,19 +1,17 @@
-import * as server from '../../app';
-import * as chai from 'chai';
+import server from '../../app';
+import chai from 'chai';
 import chaiHttp = require('chai-http');
 import { response } from 'express';
 import * as sinon from 'sinon';
 
-// @ts-ignore
-import * as User from '../../models/user.model';
-// @ts-ignore
-import * as Poll from '../../models/poll.model';
+import { default as User, UserModel } from '../../models/user.model';
+import { default as Poll, PollModel } from '../../models/poll.model';
 import { createUser, createPoll } from '../test-utils';
 
 chai.use(chaiHttp);
 
-let polls: Poll[], 
-    user: User, 
+let polls: PollModel[], 
+    user: UserModel, 
     renderSpy: sinon.SinonSpy;
 
 describe('index', () => {

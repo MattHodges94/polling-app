@@ -1,18 +1,18 @@
-import * as server from '../../app';
-import * as chai from 'chai';
+import server from '../../app';
+import chai from 'chai';
 import chaiHttp = require('chai-http');
 import { response } from 'express';
 import * as sinon from 'sinon';
 
 // @ts-ignore
-import * as Poll from '../../models/poll.model';
+import { default as Poll, PollModel } from '../../models/poll.model';
 import * as pollHelper from '../../routes/poll-helper';
 import { createUser, createPoll } from '../test-utils';
 
 chai.use(chaiHttp);
 chai.request(server)
 
-let poll: any,
+let poll: PollModel,
     user: any,
     renderSpy: sinon.SinonSpy,
     updateVotedOnCookieSpy: sinon.SinonSpy,
@@ -62,9 +62,7 @@ describe('poll', () => {
         validatePollSpy.restore();
         renderSpy.restore();
 
-        await Promise.all([
-            Poll.remove({}),
-        ]);
+        await Poll.remove({})
     })
 
     context('when logged in', () => {

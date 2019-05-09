@@ -1,18 +1,17 @@
-import * as server from '../../app';
-import * as chai from 'chai';
+import server from '../../app';
+import chai from 'chai';
 import chaiHttp = require('chai-http');
 import { response, request } from 'express';
 import * as sinon from 'sinon';
-import * as passport from 'passport';
+import passport from 'passport';
 
-// @ts-ignore
-import * as User from '../../models/user.model';
+import { default as User, UserModel } from '../../models/user.model';
 import { createUser } from '../test-utils';
 
 chai.use(chaiHttp);
 
-let user: User,
-    unverifiedUser: User,
+let user: UserModel,
+    unverifiedUser: UserModel,
     passportSpy: any,
     renderSpy: sinon.SinonSpy,
     requestSpy: any,

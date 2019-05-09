@@ -1,7 +1,5 @@
-// @ts-ignore
-import * as Poll from '../models/poll.model';
-// @ts-ignore
-import * as User from '../models/user.model';
+import { default as Poll } from '../models/poll.model';
+import { default as User, UserModel } from '../models/user.model';
 
 export const createUser = async (options = {}) => {
     const userProperties = Object.assign({
