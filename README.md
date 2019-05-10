@@ -2,7 +2,7 @@
 Polling application built using Node.js, TS, Websockets, and MongoDB
 
 ### Environment variables
-These can be set either by filling out the config/credentials` file or setting them as environment variables, e.g. process.env.BASE_URL=myurl
+These can be set either by filling out the config/credentials` file or setting them as environment variables, e.g. BASE_URL=myurl
 
 The following options are avaible:
 
