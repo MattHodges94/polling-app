@@ -31,5 +31,4 @@ gulp.task('dist', function () {
 			require('autoprefixer-core')({browsers: ['last 6 versions']})
 		]))
 		.pipe(gulp.dest('./dist/public/stylesheets'));
-    
 });

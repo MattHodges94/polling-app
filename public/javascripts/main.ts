@@ -1,20 +1,16 @@
-var credentials = require('../../config/credentials');
-var ws = new WebSocket(credentials.wsUrl);
+const credentials = require('../../config/credentials');
+const ws = new WebSocket(credentials.wsUrl);
 
-// event emmited when connected
-ws.onopen = function () {
+ws.onopen = () => {
 	console.log('websocket is connected ...');
-    
 };
-// event emmited when receiving message 
-ws.onmessage = function (ev) {
 
-	var resultsObj = JSON.parse(ev.data);
+ws.onmessage = (ev) => {
+	const resultsObj = JSON.parse(ev.data);
 	document.getElementById('result_' + resultsObj.id + '_' + resultsObj.choice).innerHTML = resultsObj.result;
 };
 
-$( document ).ready(function () {
-
+$( document ).ready(() => {
 	$('.sidenav').sidenav();
 
 	//init masonry grid
@@ -25,8 +21,6 @@ $( document ).ready(function () {
 		percentPosition: true
 	});
 
-	// fade out alert messages
-	console.log($('.alert').length > 0);
 	if ($('.alert').length > 0) {
 		setTimeout(function () {
 			$('.alert').fadeOut();
@@ -59,9 +53,7 @@ $( document ).ready(function () {
 		}
 	});
 
-	function flashAlert (message: string) {
+	const flashAlert = (message: string) => {
 		M.toast({ html: message, displayLength: 2500 });
 	}
-
 });
-

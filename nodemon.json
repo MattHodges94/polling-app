@@ -5,7 +5,8 @@
 		"app.ts",
 		"config/.{j,t}s",
 		"models.{j,t}s",
-		"routes/**/*.{j,t}s"
+		"routes/**/*.{j,t}s",
+		"lib/**/*.{j,t}s"
 	],
 	"ext": "js,json,ts",
 	"exec": "ts-node app.ts"

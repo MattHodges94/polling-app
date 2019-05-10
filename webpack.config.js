@@ -1,7 +1,4 @@
 'use strict';
-
-var path = require('path');
-var webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 require('es6-promise').polyfill();
