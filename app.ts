@@ -16,7 +16,6 @@ import flash from 'connect-flash';
 const credentials = require('./config/credentials');
 
 import { Server } from 'http';
-
 interface Error {
 	status?: number;
 	message?: string;
@@ -42,9 +41,13 @@ if (isProduction) {
 const WebSocketServer = require('ws').Server,
 	wss = new WebSocketServer({server});
 
-const index = require('./routes/index');
-const poll = require('./routes/poll')(wss);
-const login = require('./routes/login')(passport);
+import IndexController from './routes/index';
+import PollController from './routes/poll';
+import LoginController from './routes/login';
+
+const index = new IndexController();
+const poll = new PollController(wss);
+const login = new LoginController(passport);
 
 if (process.env.NODE_ENV !== 'test') {
 	mongoose.connect(credentials.databaseUrl || process.env.DATABASE_URL);
@@ -52,18 +55,15 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use(cookieParser());
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs'); 
 
-// passport config
 require('./lib/auth/passport')(passport);
 app.use(session({ secret: credentials.passportSecret || process.env.PASSPORT_SECRET })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash());
 
-// uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -71,9 +71,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(index);
-app.use(poll);
-app.use(login);
+app.use(index.router);
+app.use(poll.router);
+app.use(login.router);
 
 // catch 404 and forward to error handler
 app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {

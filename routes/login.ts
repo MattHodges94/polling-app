@@ -1,30 +1,42 @@
 import express, { Request, Response, NextFunction } from 'express';
-const router = express.Router();
-
 import { default as User, UserModel } from '../models/user.model';
 
-module.exports = function (passport: any) {
+export default class LoginController {
+	public router = express.Router();
+	public passport: any;
 
-	router.get('/logout', function (req: Request, res: Response) {
+	constructor(passport: any) {
+		this.passport = passport;
+		this.initialiseRoutes();
+	}
+
+	public initialiseRoutes() {
+		this.router.get('/logout', this.logout);
+		this.router.get('/login', this.getLoginForm);
+		this.router.post('/login', this.login);
+		this.router.get('/signup', this.getSignupform);
+		this.router.post('/signup', this.signup);
+		this.router.get('/verify/:uid/:token', this.verifyUser);
+	}
+
+	logout = (req: Request, res: Response) => {
 		if (req.user) {
 			req.logout();
 		}
 		res.redirect('/');
-	});
+	};
 
-	router.get('/login', function (req: Request, res: Response) {
+	getLoginForm = (req: Request, res: Response) => {
 		// render the page and pass in any flash data if it exists
 		res.render('login', { 
 			'user': req.user ? req.user.toObject() : void 0,
 			message: req.flash('loginMessage') 
 		}); 
-	});
+	};
         
-	// process the login form
-	router.post('/login', loginAndCheckRedirect);
+	login = (req: Request, res: Response, next: NextFunction) => loginAndCheckRedirect(req, res, next, this.passport);
 
-	// show the signup form
-	router.get('/signup', function (req: Request, res: Response) {
+	getSignupform = (req: Request, res: Response) => {
 		if (req.user) {
 			return res.redirect('/');
 		}
@@ -33,22 +45,21 @@ module.exports = function (passport: any) {
 			'user': req.user,
 			message: req.flash('signupMessage') 
 		});
-	});
+	};
         
-	// process the signup form
-	router.post('/signup', (req: Request, res: Response, next: NextFunction) => {
+	signup = (req: Request, res: Response, next: NextFunction) => {
 		if (req.user) {
 			return res.redirect('/');
 		}
 
-		passport.authenticate('local-signup', {
+		this.passport.authenticate('local-signup', {
 			successRedirect : '/',
 			failureRedirect : '/signup', 
 			failureFlash : true
 		})(req, res, next);
-	});
+	};
 
-	router.get('/verify/:uid/:token', function (req: Request, res: Response) {
+	verifyUser = (req: Request, res: Response) => {
 		var uid = req.params.uid;
 		var token = req.params.token;
 
@@ -62,18 +73,16 @@ module.exports = function (passport: any) {
 
 			res.redirect('/login');
 		});
-	});
+	};
+}
 
-	function loginAndCheckRedirect (req: Request, res: Response, next: NextFunction) {
-        if (req.user) {
-			return res.redirect('/');
-		}
-		passport.authenticate('local-login', {
-			successRedirect : req.session.returnTo ? req.session.returnTo : '/', 
-			failureRedirect : '/login', // redirect back to the signup page if there is an error
-			failureFlash : true // allow flash messages
-		})(req, res, next);
+export const loginAndCheckRedirect = (req: Request, res: Response, next: NextFunction, passport: any) => {
+	if (req.user) {
+		return res.redirect('/');
 	}
-
-	return router;
+	passport.authenticate('local-login', {
+		successRedirect : req.session.returnTo ? req.session.returnTo : '/', 
+		failureRedirect : '/login', // redirect back to the signup page if there is an error
+		failureFlash : true // allow flash messages
+	})(req, res, next);
 };

@@ -1,45 +1,53 @@
-import * as express from 'express';
-import { updateClientPolls, updateUsersVotedOnPoll, updateVotedOnCookie, validatePoll } from './poll-helper';
-var router = express.Router();
+import express, { Request, Response } from 'express';
 import { default as Poll } from '../models/poll.model';
 
-module.exports = function (wss: any) {
-	router.post('/submit/poll/:id', function (req: express.Request, res: express.Response, next: express.NextFunction) {
+export default class PollController {
+	public router = express.Router();
+	public wss: any;
 
+	constructor(wss: any) {
+		this.wss = wss;
+		this.initialiseRoutes();
+	}
+
+	public initialiseRoutes() {
+		console.log('initialising')
+		this.router.post('/submit/poll/:id', this.submitPollVote);
+		this.router.get('/poll/new', this.getPollForm);
+		this.router.post('/poll/new', this.createPoll);
+	}
+
+	submitPollVote = async (req: Request, res: Response) => {
 		if (!req.body.choice) {
 			req.flash('homeErrorMessage', 'Your response was not saved, please choose an option before submitting.');
 			return res.redirect('/');
 		}
 
-		Poll.findById(req.params.id, function (err: Error, poll: any) { 
-			//checks if logged in user has already voted or if logged out user has already voted through cookies
-			if (req.user) {
-				let redirect = !updateUsersVotedOnPoll(req, res, poll);
+		const poll = await Poll.findById(req.params.id) 
+		//checks if logged in user has already voted or if logged out user has already voted through cookies
+		if (req.user) {
+			let redirect = !updateUsersVotedOnPoll(req, res, poll);
 
-				if (redirect) {
-					return res.redirect('/')
-				}
-			} else if (req.cookies.votedOn && JSON.parse(req.cookies.votedOn).includes(req.params.id)) {
-				return res.redirect('/');
-			} else {
-				updateVotedOnCookie(req, res);
+			if (redirect) {
+				return res.redirect('/')
 			}
+		} else if (req.cookies.votedOn && JSON.parse(req.cookies.votedOn).includes(req.params.id)) {
+			return res.redirect('/');
+		} else {
+			updateVotedOnCookie(req, res);
+		}
 
-			//sets up data to be sent to each client through websockets
-			poll.results[req.body.choice] = poll.results[req.body.choice] += 1;
+		//sets up data to be sent to each client through websockets
+		poll.results[req.body.choice] = poll.results[req.body.choice] += 1;
 
-			poll.update(poll, function (err: Error) {
-				if (err) return err;
+		await poll.update(poll)
 
-				updateClientPolls(req, poll, wss);
+		updateClientPolls(req, poll, this.wss);
 
-				return res.redirect('/');
-			});
-		});
-        
-	}); 
+		return res.redirect('/');
+	}
 
-	router.get('/poll/new', function (req: express.Request, res: express.Response) {
+	getPollForm = (req: Request, res: Response) => {
 		if (req.user) {
 			res.render('poll', {
 				'user': req.user ? req.user.toObject() : void 0,
@@ -49,9 +57,9 @@ module.exports = function (wss: any) {
 			req.flash('loginMessage', 'You must be logged in to submit a poll.');
 			res.redirect('/login');
 		}
-	});
+	}
 
-	router.post('/poll/new', function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	createPoll = (req: Request, res: Response) => {
 		if (!req.user) {
 			return res.redirect('/login');
 		}
@@ -91,9 +99,62 @@ module.exports = function (wss: any) {
 			req.flash('homeSuccessMessage', 'Poll submitted for approval');
 			return res.redirect('/');
 		});
+	}
+}
 
-	});
-	return router;
+export const updateVotedOnCookie = (req: express.Request, res: express.Response) => {
+    const votedOn = req.cookies.votedOn ? JSON.parse(req.cookies.votedOn) : [];
+    votedOn.push(req.params.id);
+    res.cookie('votedOn', JSON.stringify(votedOn), {expires: new Date(Date.now() + 999999999)});
+}
+
+export const updateUsersVotedOnPoll = (req: express.Request, res: express.Response, poll: any) => {
+    if (poll.usersVoted.includes(req.user._id.toString())) {
+        return false;
+    } else {
+        return poll.usersVoted.push(req.user._id.toString());
+    }
+}
+
+export const updateClientPolls = (req: express.Request, poll: any, wss: any) => {
+    let pollUpdate = {
+        id: poll._id.toString(),
+        result: poll.results[req.body.choice],
+        choice: req.body.choice
+	};
+
+    wss.clients.forEach(function each (client: any) {
+        client.send(JSON.stringify(pollUpdate));
+    });
+}
+
+export const validatePoll = (req: express.Request, res: express.Response, poll: any) => {
+    if (poll.name.length == 0) {
+        req.flash('pollErrorMessage', 'Please enter a poll title before submitting');
+        return false
+    }
+
+    if (poll.choices.length == 0) {
+        req.flash('pollErrorMessage', 'Please enter some poll choices before submitting');
+        return false
+    }
+
+    if (poll.name.length > 46) {
+        req.flash('pollErrorMessage', 'Make sure you stick to the character limits!');
+        return false
+    }
+
+    if (poll.description.length > 54) {
+        req.flash('pollErrorMessage', 'Make sure you stick to the character limits!');
+        return false
+    }
+
+    poll.choices.forEach((choice: any) => {
+        if (choice.length > 20) {
+            req.flash('pollErrorMessage', 'Make sure you stick to the character limits!');
+            return false
+        }
+    });
+
+    return true;
 };
-
-// module.exports = router
