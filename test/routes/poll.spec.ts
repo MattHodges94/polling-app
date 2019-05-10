@@ -6,7 +6,7 @@ import * as sinon from 'sinon';
 
 // @ts-ignore
 import { default as Poll, PollModel } from '../../models/poll.model';
-import * as pollHelper from '../../routes/poll-helper';
+import * as PollController from '../../routes/poll'
 import { createUser, createPoll } from '../test-utils';
 
 chai.use(chaiHttp);
@@ -23,14 +23,10 @@ let poll: PollModel,
 describe('poll', () => {
 
     before(async () => {
-        // @ts-ignore
-        updateVotedOnCookieSpy = sinon.spy(pollHelper, 'updateVotedOnCookie');
-        // @ts-ignore
-        updateUsersVotedOnPollSpy = sinon.spy(pollHelper, 'updateUsersVotedOnPoll');
-        // @ts-ignore
-        updateClientPollsSpy = sinon.spy(pollHelper, 'updateClientPolls');
-        // @ts-ignore
-        validatePollSpy = sinon.spy(pollHelper, 'validatePoll');
+        updateVotedOnCookieSpy = sinon.spy(PollController, 'updateVotedOnCookie');
+        updateUsersVotedOnPollSpy = sinon.spy(PollController, 'updateUsersVotedOnPoll');
+        updateClientPollsSpy = sinon.spy(PollController, 'updateClientPolls');
+        validatePollSpy = sinon.spy(PollController, 'validatePoll');
         renderSpy = sinon.spy(response, 'render');
 
         [poll, user] = await Promise.all([
