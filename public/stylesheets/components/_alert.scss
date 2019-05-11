@@ -9,18 +9,14 @@
         min-width: 90%;
         bottom: 1rem;
     }
-    
 }
 .toast{
     border-radius: 30px;
     background-color: orangered !important;
-
-    
-
 }
 
 .alert-green{
-    background-color: #3ed783 !important;
+    background-color: $valid-green !important;
 }
 
 .alert{
@@ -42,5 +38,4 @@
         width: 95%;
         bottom: 2rem;
     }
-
 }

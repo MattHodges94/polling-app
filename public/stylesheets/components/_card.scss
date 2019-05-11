@@ -6,13 +6,17 @@
 .card {
     word-break: break-word;
     margin: .5rem 0 2.5rem 0;
+    border-radius: 1rem;
     .card-action{
         border-top: 0px;
+        &:last-child{
+            border-radius: 0 0 1rem 1rem;
+        }
     }
     &__link{
         text-transform: none !important;
         &:hover{
-            color: #59e799 !important;
+            color: $green !important;
         }
     }
 }

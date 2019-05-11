@@ -16,22 +16,19 @@
     width: 98% !important;
 }
 
-
-
 .input-field input.valid {
-    border-bottom: 1px solid #3ED783 !important;
-    box-shadow: 0 1px 0 0 #3ED783;
+    border-bottom: 1px solid $valid-green !important;
+    box-shadow: 0 1px 0 0 $valid-green;
 }
-
 
 .input-field input:focus {
     border-bottom: 1px solid #474949 !important;
     box-shadow: 0 1px 0 0 #474949 !important;
-  }
+}
 
 .input-field input:focus + label {
     color: #474949 !important;
-  }
+}
 
 .input-field label {
     color: #474949;
