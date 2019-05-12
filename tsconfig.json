@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "outDir": "dist",
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
@@ -7,11 +8,12 @@
         "esModuleInterop": true,
     },
     "include": [
-        "public/javascripts/**/*"
+        "src/**/*", 
+        "app.ts"
     ],
     "exclude": [
         "node_modules",
-        "**/*.spec.ts"
+        "test/**/*.spec.ts"
     ],
     "types": ["materialize-css"]
 }
