@@ -4,8 +4,8 @@ import chaiHttp = require('chai-http');
 import { response } from 'express';
 import * as sinon from 'sinon';
 
-import { default as User, UserModel } from '../../models/user.model';
-import { default as Poll, PollModel } from '../../models/poll.model';
+import { default as User, UserModel } from '../../src/models/user.model';
+import { default as Poll, PollModel } from '../../src/models/poll.model';
 import { createUser, createPoll } from '../test-utils';
 
 chai.use(chaiHttp);

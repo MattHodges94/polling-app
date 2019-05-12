@@ -5,7 +5,7 @@ import { response, request } from 'express';
 import * as sinon from 'sinon';
 import passport from 'passport';
 
-import { default as User, UserModel } from '../../models/user.model';
+import { default as User, UserModel } from '../../src/models/user.model';
 import { createUser } from '../test-utils';
 
 chai.use(chaiHttp);

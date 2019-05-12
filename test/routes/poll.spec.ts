@@ -5,8 +5,8 @@ import { response } from 'express';
 import * as sinon from 'sinon';
 
 // @ts-ignore
-import { default as Poll, PollModel } from '../../models/poll.model';
-import * as PollController from '../../routes/poll'
+import { default as Poll, PollModel } from '../../src/models/poll.model';
+import * as PollController from '../../src/routes/poll'
 import { createUser, createPoll } from '../test-utils';
 
 chai.use(chaiHttp);

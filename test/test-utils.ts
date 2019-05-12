@@ -1,5 +1,5 @@
-import { default as Poll } from '../models/poll.model';
-import { default as User, UserModel } from '../models/user.model';
+import { default as Poll } from '../src/models/poll.model';
+import { default as User, UserModel } from '../src/models/user.model';
 
 export const createUser = async (options = {}) => {
     const userProperties = Object.assign({
