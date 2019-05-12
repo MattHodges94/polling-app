@@ -41,9 +41,9 @@ if (isProduction) {
 const WebSocketServer = require('ws').Server,
 	wss = new WebSocketServer({server});
 
-import IndexController from './routes/index';
-import PollController from './routes/poll';
-import LoginController from './routes/login';
+import IndexController from './src/routes/index';
+import PollController from './src/routes/poll';
+import LoginController from './src/routes/login';
 
 const index = new IndexController();
 const poll = new PollController(wss);
