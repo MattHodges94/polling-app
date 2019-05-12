@@ -4,7 +4,7 @@ import nodemailer from 'nodemailer';
 import randomstring from 'randomstring';
 import { Request } from 'express';
 
-const credentials = require('../../config/credentials');
+const credentials = require('../../../config/credentials');
 
 module.exports = function (passport: any) {
 
