@@ -4,7 +4,7 @@ var $ = require('gulp-load-plugins')();
 
 gulp.task('dist', function () {
 	gulp.src(['./config/**/*']).pipe(gulp.dest('./dist/config'));
-	gulp.src(['./src/views/**/*']).pipe(gulp.dest('./dist/src/views'));
+	gulp.src(['./views/**/*']).pipe(gulp.dest('./dist/views'));
 	gulp.src(['package.json']).pipe(gulp.dest('./dist'));
 	gulp.src('./public/images/**/*').pipe(gulp.dest('./dist/public/images'));
 	gulp.src('./public/favicon.ico').pipe(gulp.dest('./dist/public'));
