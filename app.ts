@@ -58,7 +58,7 @@ app.use(cookieParser());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs'); 
 
-require('./lib/auth/passport')(passport);
+require('./src/lib/auth/passport')(passport);
 app.use(session({ secret: credentials.passportSecret || process.env.PASSPORT_SECRET })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions

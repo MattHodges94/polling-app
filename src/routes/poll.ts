@@ -11,7 +11,6 @@ export default class PollController {
 	}
 
 	public initialiseRoutes() {
-		console.log('initialising')
 		this.router.post('/submit/poll/:id', this.submitPollVote);
 		this.router.get('/poll/new', this.getPollForm);
 		this.router.post('/poll/new', this.createPoll);

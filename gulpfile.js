@@ -3,6 +3,7 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 
 gulp.task('dist', function () {
+	gulp.src(['./config/**/*']).pipe(gulp.dest('./dist/config'));
 	gulp.src(['./src/views/**/*']).pipe(gulp.dest('./dist/src/views'));
 	gulp.src(['package.json']).pipe(gulp.dest('./dist'));
 	gulp.src('./public/images/**/*').pipe(gulp.dest('./dist/public/images'));
