@@ -195,7 +195,7 @@ describe('poll', () => {
                 });
             });
 
-            context('when no no choice is sent', () => {
+            context('when no choice is sent', () => {
                 it('should redirect to the homepage', (done: any) => {
                     chai.request('http://127.0.0.1:3000')
                     .post(`/submit/poll/${ poll._id }`)
